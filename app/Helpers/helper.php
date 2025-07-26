@@ -1,18 +1,32 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 
-function uploadImage($image, $folder = '')
-{
-    $imageName = rand() . time() . '.' . $image->getClientOriginalExtension();
-    $image->move(public_path('images/' . $folder), $imageName);
+if (!function_exists('uploadImage')) {
+    function uploadImage(UploadedFile $image, $folder = '')
+    {
+        $imageName = time() . '_' . rand(1000, 9999) . '.' . $image->getClientOriginalExtension();
+        $destinationPath = public_path('images/' . $folder);
 
-    return $imageName;
+        if (!File::exists($destinationPath)) {
+            File::makeDirectory($destinationPath, 0755, true);
+        }
+
+        $image->move($destinationPath, $imageName);
+
+        return $imageName;
+    }
 }
 
-function deleteImage($imageName, $folder = '')
-{
-    file::delete(public_path('images/' . $folder . '/' . $imageName));
-    return true;
+if (!function_exists('deleteImage')) {
+    function deleteImage($imageName, $folder = '')
+    {
+        $imagePath = public_path('images/' . $folder . '/' . $imageName);
+        if (File::exists($imagePath)) {
+            File::delete($imagePath);
+            return true;
+        }
+        return false;
+    }
 }

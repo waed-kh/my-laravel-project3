@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول </title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3b82f6',secondary:'#64748b'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Tajawal', sans-serif;
+}
+.show-password-toggle:checked ~ .password-toggle-icon .show-icon {
+display: none;
+}
+.show-password-toggle:not(:checked) ~ .password-toggle-icon .hide-icon {
+display: none;
+}
+input[type="checkbox"] {
+appearance: none;
+-webkit-appearance: none;
+width: 18px;
+height: 18px;
+border: 2px solid #cbd5e1;
+border-radius: 4px;
+position: relative;
+cursor: pointer;
+outline: none;
+}
+input[type="checkbox"]:checked {
+background-color: #3b82f6;
+border-color: #3b82f6;
+}
+input[type="checkbox"]:checked::after {
+content: "";
+position: absolute;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+top: 1px;
+left: 5px;
+transform: rotate(45deg);
+}
+.password-strength {
+height: 4px;
+transition: all 0.3s;
+}
+.password-strength.weak { width: 30%; background-color: #ef4444; }
+.password-strength.medium { width: 60%; background-color: #f59e0b; }
+.password-strength.strong { width: 100%; background-color: #10b981; }
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<div class="flex flex-col md:flex-row min-h-screen">
+<!-- القسم الأيسر: الصورة والشعار -->
+<div class="hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-50 to-blue-100 items-center justify-center relative p-8">
+<div class="text-center">
+<div class="mb-8">
+<h1 class="text-4xl font-['Pacifico'] text-primary mb-2">بكرة</h1>
+<p class="text-gray-600 text-lg">منصة المشاريع والخدمات المحلية</p>
+</div>
+<img src="https://readdy.ai/api/search-image?query=A%20professional%20illustration%20showing%20a%20diverse%20group%20of%20freelancers%20working%20on%20various%20projects%2C%20with%20a%20clean%20minimalist%20style.%20The%20image%20shows%20people%20collaborating%20on%20a%20digital%20platform%2C%20with%20subtle%20blue%20accents.%20The%20background%20is%20light%20and%20airy%2C%20with%20soft%20gradients.%20The%20illustration%20style%20is%20modern%20and%20professional%2C%20suitable%20for%20a%20freelance%20marketplace%20website.&width=600&height=500&seq=123&orientation=landscape" alt="منصة المشاريع" class="rounded-xl shadow-lg mx-auto max-w-md object-cover object-top">
+<div class="mt-8">
+<h2 class="text-xl font-bold text-gray-800 mb-3">أطلق مشروعك اليوم</h2>
+<p class="text-gray-600">اكتشف أفضل المواهب المحلية لإنجاز مشاريعك بكفاءة عالية وأسعار منافسة</p>
+</div>
+</div>
+</div>
+<!-- القسم الأيمن: نموذج تسجيل الدخول -->
+<div class="w-full md:w-1/2 flex items-center justify-center p-4 md:p-8">
+  <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 w-full max-w-md">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">تسجيل الدخول</h1>
+      <p class="text-gray-500">مرحباً بعودتك! يرجى إدخال بياناتك للوصول إلى حسابك</p>
+    </div>
+    <form id="loginForm" class="space-y-5">
+      <!-- حقل البريد الإلكتروني -->
+      <div class="space-y-2">
+        <label for="email" class="block text-sm font-medium text-gray-700">البريد الإلكتروني</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <div class="w-5 h-5 flex items-center justify-center text-gray-400">
+              <i class="ri-mail-line"></i>
+            </div>
+          </div>
+          <input type="email" id="email" 
+            class="w-full pr-10 py-3 border border-gray-300 rounded text-sm 
+                   focus:outline-none focus:ring-0 focus:border-gray-300" 
+            placeholder="أدخل بريدك الإلكتروني">
+        </div>
+        <p id="emailError" class="text-red-500 text-xs hidden">يرجى إدخال بريد إلكتروني صحيح</p>
+      </div>
+      <!-- حقل كلمة المرور -->
+      <div class="space-y-2">
+        <label for="password" class="block text-sm font-medium text-gray-700">كلمة المرور</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <div class="w-5 h-5 flex items-center justify-center text-gray-400">
+              <i class="ri-lock-line"></i>
+            </div>
+          </div>
+          <input type="password" id="password" 
+            class="w-full pr-10 py-3 border border-gray-300 rounded text-sm 
+                   focus:outline-none focus:ring-0 focus:border-gray-300" 
+            placeholder="أدخل كلمة المرور">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <input type="checkbox" id="showPassword" class="show-password-toggle hidden">
+            <label for="showPassword" class="password-toggle-icon cursor-pointer">
+              <div class="w-5 h-5 flex items-center justify-center text-gray-400 show-icon">
+                <i class="ri-eye-line"></i>
+              </div>
+              <div class="w-5 h-5 flex items-center justify-center text-gray-400 hide-icon">
+                <i class="ri-eye-off-line"></i>
+              </div>
+            </label>
+          </div>
+        </div>
+       
+      </div>
+      <!-- تذكرني ونسيت كلمة المرور -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <input type="checkbox" id="remember" class="ml-2">
+          <label for="remember" class="text-sm text-gray-600">تذكرني</label>
+        </div>
+        <a href="#" class="text-sm text-primary hover:text-primary-dark">نسيت كلمة المرور؟</a>
+      </div>
+      <!-- زر تسجيل الدخول -->
+      <button type="submit" class="w-full bg-primary text-white py-3 rounded-button font-medium hover:bg-blue-600 transition duration-300 whitespace-nowrap">
+        تسجيل الدخول
+      </button>
+    </form>
+    <!-- التسجيل الجديد -->
+    <div class="text-center mt-6">
+      <p class="text-gray-600">
+        ليس لديك حساب؟ 
+        <a href="https://readdy.ai/home/e71ade5f-f53a-4ca8-a39a-81a4b82977f6/d52690a1-f8e7-426c-a350-d7984efd01aa" data-readdy="true" class="text-primary font-medium hover:underline">
+          إنشاء حساب جديد
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const emailError = document.getElementById('emailError');
+const passwordError = document.getElementById('passwordError');
+const passwordStrength = document.getElementById('passwordStrength');
+const showPasswordToggle = document.getElementById('showPassword');
+const loginForm = document.getElementById('loginForm');
+// التحقق من البريد الإلكتروني
+emailInput.addEventListener('blur', function() {
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if (!emailPattern.test(emailInput.value) && emailInput.value !== '') {
+emailError.classList.remove('hidden');
+emailInput.classList.add('border-red-500');
+} else {
+emailError.classList.add('hidden');
+emailInput.classList.remove('border-red-500');
+}
+});
+// التحقق من قوة كلمة المرور
+passwordInput.addEventListener('input', function() {
+const password = passwordInput.value;
+if (password.length === 0) {
+passwordStrength.className = 'password-strength';
+passwordStrength.style.width = '0';
+} else if (password.length < 6) {
+passwordStrength.className = 'password-strength weak';
+} else if (password.length < 10) {
+passwordStrength.className = 'password-strength medium';
+} else {
+passwordStrength.className = 'password-strength strong';
+}
+if (password.length < 8 && password.length > 0) {
+passwordError.classList.remove('hidden');
+} else {
+passwordError.classList.add('hidden');
+}
+});
+// إظهار/إخفاء كلمة المرور
+showPasswordToggle.addEventListener('change', function() {
+passwordInput.type = this.checked ? 'text' : 'password';
+});
+// منع إرسال النموذج إذا كانت هناك أخطاء
+loginForm.addEventListener('submit', function(e) {
+e.preventDefault();
+let isValid = true;
+// التحقق من البريد الإلكتروني
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if (!emailPattern.test(emailInput.value)) {
+emailError.classList.remove('hidden');
+emailInput.classList.add('border-red-500');
+isValid = false;
+}
+// التحقق من كلمة المرور
+if (passwordInput.value.length < 8) {
+passwordError.classList.remove('hidden');
+passwordInput.classList.add('border-red-500');
+isValid = false;
+}
+if (isValid) {
+// إرسال النموذج إلى الخادم (هنا يمكن إضافة رمز AJAX للإرسال)
+alert('تم تسجيل الدخول بنجاح!');
+loginForm.reset();
+}
+});
+});
+</script>
+</body>
+</html>

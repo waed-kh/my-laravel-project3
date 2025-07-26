@@ -24,7 +24,7 @@ public function checkout(Project $project ,Request $request)
      $categories = Category::get();
     $projects = Project::query();
     $testimonials = Testimonial::inRandomOrder()->take(3)->get();
-    $locations = Location::select('id', 'name')->get();  // هنا جلبنا المواقع
+    $locations = Location::select('id', 'name')->get();
 
     if ($request->query('search')) {
         $projects = $projects->where('title', 'LIKE', "%{$request->query('search')}%");
@@ -49,33 +49,31 @@ public function checkout(Project $project ,Request $request)
 
 
 
- public function createStripeSession($id)
-    {
-        $project = Project::findOrFail($id);
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+public function createStripeSession($id)
+{
+    $project = Project::findOrFail($id);
 
-        $session = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'currency' => 'usd',
-                        'product_data' => [
-                            'name' => $project->title,
-                        ],
-                        'unit_amount' => (int)($project->min_price * 100),
-                    ],
-                    'quantity' => 1,
+    Stripe::setApiKey(env('STRIPE_SECRET'));
+
+    $session = Session::create([
+        'payment_method_types' => ['card'],
+        'line_items' => [[
+            'price_data' => [
+                'currency' => 'usd',
+                'product_data' => [
+                    'name' => $project->title,
                 ],
+                'unit_amount' => (int)($project->min_price * 100),
             ],
-            'mode' => 'payment',
-            'success_url' => route('payment.success', $project->id),
-            'cancel_url' => route('payment.cancel', $project->id),
-        ]);
+            'quantity' => 1,
+        ]],
+        'mode' => 'payment',
+        'success_url' => route('payment.success', $project->id),
+        'cancel_url' => route('payment.cancel', $project->id),
+    ]);
 
-        return response()->json(['session_id' => $session->id]);
-    }
-
+    return redirect($session->url)  ;
+}
     public function success($id)
     {
         $project = Project::findOrFail($id);

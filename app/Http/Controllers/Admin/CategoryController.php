@@ -29,15 +29,25 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CategoryRequest $request)
-    {
-        $data = $request->except("_token", 'image');
-        $data['image'] = uploadImage($request->file('image'), 'categories');
+ public function store(Request $request)
+{
+    // الفالديشن
+  $request->validate([
+    'name' => ['required', 'string', 'max:255', 'regex:/[a-zA-Zأ-ي]/'],
+], [
+    'name.required' => 'يرجى إدخال اسم التصنيف',
+    'name.string' => 'اسم التصنيف يجب أن يكون نصًا',
+  'name.regex' => 'اسم التصنيف يجب أن يحتوي على أحرف وليس أرقام فقط',  
+]);
 
-        Category::create($data);
+    // حفظ التصنيف
+    Category::create([
+        'name' => $request->name,
+    ]);
 
-        return redirect()->route('admin.category.index')->with('success', 'Category Created Successfully');
-    }
+    // الرجوع لصفحة التصنيفات
+    return redirect()->route('admin.category.index')->with('success', 'تم إنشاء التصنيف بنجاح');
+}
 
     /**
      * Display the specified resource.
@@ -58,23 +68,18 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
-    {
-        $data = $request->except("_token", 'image');
-        $oldImage = '';
-        if ($request->hasFile('image')) {
-            $oldImage = $category->image;
-            $data['image'] = uploadImage($request->file('image'), 'categories');
-        }
+   public function update(Request $request, Category $category)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+    ]);
 
-        $category->update($data);
+    $category->update([
+        'name' => $request->name,
+    ]);
 
-        if ($oldImage) {
-            deleteImage($oldImage, 'categories');
-        }
-
-        return redirect()->route('admin.category.index')->with('success', 'Category Updated Successfully');
-    }
+    return redirect()->route('admin.category.index')->with('success', 'تم تعديل التصنيف بنجاح');
+}
 
     /**
      * Remove the specified resource from storage.
@@ -82,7 +87,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        deleteImage($category->image, 'categories'); // delete image
+      
         return redirect()->route('admin.category.index')->with('success', 'Category Deleted Successfully');
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Project extends Model
 {
@@ -23,14 +24,20 @@ class Project extends Model
     {
         return $this->hasOne(ProjectContact::class);
     }
+
     public function workdays(): BelongsToMany
     {
         return $this->belongsToMany(
             WorkDay::class,
             'project_workday',
             'project_id',
-            'workday_id'
+            'workday_id',
         );
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function category(): BelongsTo
@@ -43,8 +50,28 @@ class Project extends Model
         return $this->belongsTo(Location::class);
     }
 
-    public function getImgPathAttribute()
-    {
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+  public function getImgPathAttribute()
+{
+    if ($this->image) {
         return asset('images/projects/' . $this->image);
     }
+    return null;
+}
+
+
+    protected $fillable = ['status'];
 }

@@ -19,11 +19,25 @@ class LocationRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+   public function rules(): array
     {
 
         return [
-            'name' => 'required',
+               'name' => ['required', 'string', 'max:255', 'regex:/[a-zA-Zأ-ي]/'],
+
+        ];
+    }
+
+
+   public function messages(): array
+    {
+
+        return [
+              'name.required' => 'يرجى إدخال اسم  الموقع',
+    'name.string' => 'اسم الموقع يجب أن يكون نصًا',
+    'name.regex' => 'اسم  الموقع يجب أن يحتوي على أحرف وليس أرقام فقط' 
+
         ];
     }
 }
+

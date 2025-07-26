@@ -51,10 +51,12 @@ class TestimonialController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Testimonial $testimonial)
-    {
-        return view('admins.testimonials.edit', compact('testimonial'));
-    }
+   public function edit(Testimonial $testimonial)
+{
+    $users = User::select('id', 'name')->get(); // جلب المستخدمين
+    return view('admins.testimonials.edit', compact('testimonial', 'users')); // إرسال المتغيرين للعرض
+}
+
 
     /**
      * Update the specified resource in storage.

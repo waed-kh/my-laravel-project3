@@ -17,4 +17,9 @@ class WorkDay extends Model
         'from_time' => 'datetime',
         'to_time' => 'datetime'
     ];
+
+
+   
+
 }
+
